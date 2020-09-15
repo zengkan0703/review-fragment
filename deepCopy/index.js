@@ -1,18 +1,5 @@
-// 生成固定深度和广度的对象
-function createObj(depth, breadth) {
-  const res = {};
-  let temp = res;
-  for (let i = 0; i < depth; i ++) {
-    temp = temp.data = {};
-  }
-  for (let j = 0; j < breadth; j ++) {
-    temp[j] = j;
-  }
-  return res;
-}
-
 function isObj(param) {
-  return Object.prototype.toString.call(param) === "[object Object]";
+  return typeof param === "object" && param !== null;
 }
 
 function deepCopy(obj, objMap = new WeakMap()) {
@@ -23,7 +10,7 @@ function deepCopy(obj, objMap = new WeakMap()) {
   if (objMap.has(obj)) {
     return objMap.get(obj);
   }
-  const target = {};
+  const target = Array.isArray(obj) ? [] : {};
   objMap.set(obj, target)
   for (let key of Object.keys(obj)) {
     const val = obj[key];
@@ -41,7 +28,7 @@ function deepCopy2(obj) {
   if (!isObj(obj)) {
     return;
   }
-  const objMap = new Map();
+  const objMap = new WeakMap();
   const root = {
     temp: null
   };
@@ -60,7 +47,7 @@ function deepCopy2(obj) {
       parent[key] = objMap.get(data);
       continue;
     }
-    let res = parent[key] = {};
+    let res = parent[key] = Array.isArray(data) ? [] : {};
     // 保存当前 data 在拷贝之后对象的引用 res
     objMap.set(data, res)
     for (let key2 of Object.keys(data)) {
