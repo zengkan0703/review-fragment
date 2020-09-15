@@ -1,5 +1,3 @@
-
-
 // 生成固定深度和广度的对象
 function createObj(depth, breadth) {
   const res = {};
@@ -81,5 +79,7 @@ function deepCopy2(obj) {
   return root.temp;
 }
 
-
-
+module.exports = {
+  deepCopy,
+  deepCopy2
+}

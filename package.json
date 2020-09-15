@@ -4,11 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "promises-aplus-tests promise/test.js"
+    "test-promise": "promises-aplus-tests promise/test.js",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "promises-aplus-tests": "^2.1.2"
+  },
+  "devDependencies": {
+    "jest": "^26.4.2"
   }
 }
