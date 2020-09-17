@@ -46,3 +46,22 @@ Function.prototype.myApply = function(context, arr = []) {
   delete context.func;
   return res;
 }
+
+Function.prototype.myBind = function(context, ...args) {
+  const originFunc = this;
+  const fBound = function(...rest) {
+    if (this instanceof fBound) {
+      // 表示是用 new 操作符构造的，原有绑定的 context 会失效
+      return originFunc.call(this, ...args, ...rest);
+    } else {
+      return originFunc.call(context, ...args, ...rest)
+    }
+  }
+  // 继承原函数的 prototype
+  if (originFunc.prototype) {
+    function fNOP() {};
+    fNOP.prototype = originFunc.prototype;
+    fBound.prototype = new fNOP();
+  }
+  return fBound;
+}
