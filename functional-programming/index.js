@@ -1,3 +1,4 @@
+// https://zh.javascript.info/currying-partials
 var fn = curry(function(a, b, c) {
   console.log([a, b, c]);
 });
@@ -7,15 +8,12 @@ fn("a", "b")("c") // ["a", "b", "c"]
 fn("a")("b")("c") // ["a", "b", "c"]
 fn("a")("b", "c") // ["a", "b", "c"]
 
-function curry(fn, length = fn.length) {
-  return function(...args) {
-    if (args.length < length) {
-      return curry(
-        function(...other) {
-          fn.call(this, ...args, ...other);
-        },
-        length - args.length
-      )
+function curry(fn) {
+  return function curried(...args) {
+    if (args.length < fn.length) {
+      return function(...other) {
+        return curried.call(this, ...args, ...other);
+      }
     } else {
       return fn.call(this, ...args);
     }
