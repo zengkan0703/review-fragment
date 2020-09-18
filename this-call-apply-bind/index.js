@@ -6,10 +6,12 @@ Function.prototype.myCall = function(context, ...args) {
   }
   // 如果传入的是原始值，那么这个原始值会被包装
   context = Object(context)
+  // 用 symbol 作为 key，避免和 context 属性冲突
+  const func = Symbol("func");
   // this 表示当前函数
-  context.func = this;
-  const res = context.func(...args);
-  delete context.func;
+  context[func] = this;
+  const res = context[func](...args);
+  delete context[func];
   return res;
 }
 
@@ -40,10 +42,11 @@ Function.prototype.myApply = function(context, arr = []) {
   }
   // 如果传入的是原始值，那么这个原始值会被包装
   context = Object(context)
+  const func = Symbol("func");
   // this 表示当前函数
-  context.func = this;
-  const res = context.func(...arr);
-  delete context.func;
+  context[func] = this;
+  const res = context[func](...args);
+  delete context[func];
   return res;
 }
 
