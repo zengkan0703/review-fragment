@@ -37,13 +37,12 @@ Vue 的一个核心思想是数据驱动
    1. initGlobalAPI
 
       1. 在 Vue 构造函数上初始化一些方法和属性
-
-         ```js
-         Vue.util Vue.config Vue.set Vue.delete Vue.nextTick Vue.observable
-         Vue.options 
-         在 Vue.options 上扩展 builtInComponents，也就是 KeepAlive 组件
-         ```
-
+         1. Vue.util
+         2. Vue.config，且通过 setter 提示不可改变
+         3. Vue.set Vue.delete Vue.nextTick
+         4. Vue.options = Object.create(null)，Vue.config 初始化为一个空对象。
+            1. 随后设置 Vue.options.components、Vue.options.directives、Vue.options.filters 为一个空对象
+            2. 在 Vue.options.components 上扩展 builtInComponents，也就是 KeepAlive 组件
       2. initUse，在 Vue 上挂载 Vue.use 方法，用来安装插件
 
       3. initMixin，在 Vue 上挂载 mixin 方法，用来设置全局 mixin
