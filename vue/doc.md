@@ -130,3 +130,13 @@ runtime/index 中的 $mount：执行 core/instance/lifecycle 中的 mountCompone
 - 新建 watcher 传入 updateComponent 方法
 - 判断如果是根节点，执行 mounted 钩子
 
+### 响应式
+##### Observer 
+Observer 类会附加在每一个被侦测的 object 上，会通过 defineReactive 方法把 object 的所有属性转换为 getter/setter 的形式，来收集属性的依赖，并且当属性发生变化时通知这些依赖
+##### Watcher
+Watcher 相当于一个中介，数据发生变化时通知 watcher，然后 watcher 再执行具体的回调函数（watch、compuetd、render 等等）
+##### Dep
+Dep 用来管理每一个属性的依赖，这个依赖就是 watcher 实例。
+- 对象中的每个 key 的 dep 实例保存在 defineReactive 的闭包中，在 getter 中用 dep.depend 收集依赖，在 setter 中用 dep.notify() 方法通知更新，分别执行该 dep 中保存的 watcher 对应的 update 方法
+- 数组的 dep 实例保存在该数组的 Obserever 实例中，也就是 \_\_ob\_\_ 属性中。在该数组对应的 key 的 getter 中收集依赖，也就是源码中对应的 childOb.dep.depend() 方法。比如 data: { a: [1,2] }，a 数组的依赖会在 data.a 的 getter 中收集，这里面的 childOb 就是数组 a 对应的 \_\_ob\_\_。然后在修改数组的方法中执行 dep.notify()
+
