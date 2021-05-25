@@ -14,11 +14,7 @@ function deepCopy(obj, objMap = new WeakMap()) {
   objMap.set(obj, target)
   for (let key of Object.keys(obj)) {
     const val = obj[key];
-    if (isObj(val)) {
-      target[key] = deepCopy(val, objMap);
-    } else {
-      target[key] = val;
-    }
+    target[key] = deepCopy(val, objMap);
   }
   return target;
 }

@@ -1,6 +1,6 @@
 const { deepCopy, deepCopy2 } = require("./index.js");
 
-const copy = deepCopy2;
+const copy = deepCopy;
 
 test("普通复制", () => {
   const obj = { a: 1, b: 2, c: 3, d: null };
