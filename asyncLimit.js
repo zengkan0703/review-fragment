@@ -52,3 +52,84 @@ function asyncLimit(tasks, limit) {
     runTask();
   })
 }
+
+
+/*
+实现 asyncLimit 并发控制函数，
+满足以下测试用例
+const limit = asyncLimit(2);
+
+let res = "";
+function callback(value) {
+  res += value;
+}
+function promiseDec(value) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(value)
+    }, 200)
+  })
+}
+limit(() => promiseDec("h")).then(callback);
+limit(() => promiseDec("e")).then(callback);
+limit(() => promiseDec("l")).then(callback);
+limit(() => promiseDec("l")).then(callback);
+limit(() => promiseDec("o")).then(callback);
+
+setTimeout(() => {
+  console.log(res); // "he"
+}, 300)
+setTimeout(() => {
+  console.log(res); // "hell"
+}, 500)
+setTimeout(() => {
+  console.log(res); // "hello"
+}, 700)
+*/
+
+function asyncLimit2(limit) {
+  let num = 0;
+  const tasks = [];
+  return function(task) {
+    if (num < limit) {
+      num++;
+      return new Promise((resolve, reject) => {
+        try {
+          Promise.resolve(task()).then(res => {
+            resolve(res);
+          }).catch(err => {
+            reject(err)
+          }).finally(() => {
+            num--;
+            if (tasks.length) {
+              tasks.shift()();
+            }
+          })
+        } catch(err) {
+          reject(err)
+        }
+      })
+    } else {
+      return new Promise((resolve, reject) => {
+        function run() {
+          num++;
+          try {
+            Promise.resolve(task()).then(res => {
+              resolve(res);
+            }).catch(err => {
+              reject(err)
+            }).finally(() => {
+              num--;
+              if (tasks.length) {
+                tasks.shift()();
+              }
+            })
+          } catch(err) {
+            reject(err)
+          }
+        }
+        tasks.push(run);
+      })
+    }
+  }
+}
