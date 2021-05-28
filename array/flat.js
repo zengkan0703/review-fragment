@@ -56,3 +56,24 @@ function flat3(arr, n) {
   }
   return res;
 }
+
+// generator 版本
+function* flat4(arr, n) {
+  for (let item of arr) {
+    if (Array.isArray(item) && n > 0) {
+      yield* flat4(item, n-1);
+    } else {
+      yield item
+    }
+  }
+}
+
+function test(arr, n) {
+  const res = [];
+  for (let item of flat4(arr, n)) {
+    res.push(item);
+  }
+  return res;
+}
+
+// [...flat4(arr, n)]
